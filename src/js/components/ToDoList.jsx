@@ -19,6 +19,28 @@ const ToDoList = () => {
         })
     }
 
+    const createUser = async () => {
+        try {
+            const response = await fetch(`${urlBase}/users/jose`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify([])
+            })
+    
+            if (response.ok) {
+                console.log("Usuario creado correctamente")
+            } else if (response.status === 400) {
+                console.log("El usuario ya existe")
+            } else {
+                console.log("Error al crear el usuario")
+            }
+        } catch (error) {
+            console.log("Error creando el usuario:", error)
+        }
+    };
+
     const saveTask = async (event) => {
 
         if (event.key == "Enter") {
@@ -92,8 +114,12 @@ const ToDoList = () => {
     }
 
     useEffect(() => {
-        getAllTask()
-    }, [])
+        const init = async () => {
+            await createUser()
+            await getAllTask()
+        };
+        init()
+    }, []);
 
     return (
         <div className="container">
